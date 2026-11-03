@@ -1,0 +1,81 @@
+<!-- NAVBAR -->
+<nav class="navbar">
+
+  <!-- LOGO / TÍTULO -->
+  <div class="navbar-brand">
+    <i class="fa fa-ticket"></i>
+    <span>Sistema Bingo Online</span>
+  </div>
+
+  <!-- MENÚ -->
+  <div class="navbar-menu">
+
+    <button
+      routerLink=""
+      routerLinkActive="activo"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-button"
+    >
+      <i class="fa fa-home"></i>
+      <span>Home</span>
+    </button>
+
+    <button
+      routerLink="carga-datos-jugadores"
+      routerLinkActive="activo"
+      class="nav-button"
+    >
+      <i class="fa fa-table"></i>
+      <span>Carga Jugadores</span>
+    </button>
+
+    <button
+      routerLink="carga-datos-sorteo"
+      routerLinkActive="activo"
+      class="nav-button"
+    >
+      <i class="fa fa-plus"></i>
+      <span>Carga Datos Sorteo</span>
+    </button>
+
+  </div>
+
+</nav>
+
+
+<!-- CONTENT -->
+<main
+  class="background"
+  id="home"
+>
+
+  <div class="contenido">
+
+    <router-outlet></router-outlet>
+
+  </div>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer>
+
+  <a
+    href="http://localhost:5214/swagger/index.html"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="swagger-link"
+  >
+
+    <button class="swagger-button">
+
+      <i class="fa fa-cloud"></i>
+
+      <span>Swagger API</span>
+
+    </button>
+
+  </a>
+
+</footer>

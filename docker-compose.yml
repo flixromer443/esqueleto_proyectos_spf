@@ -1,0 +1,70 @@
+version: '3'
+services:
+  sigcap-frontend:
+    build:
+      context: sigcap-frontend/.
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - API_TABLERO_URL:$API_TABLERO_URL
+      - API_GLOBAL_URL:$API_GLOBAL_URL
+      - URI_PLANILLA_CONTROL:$URI_PLANILLA_CONTROL
+      - URI_CUPONERA:$URI_CUPONERA
+
+    image: ${APP_NAME}-frontend
+    container_name: ${APP_NAME}-frontend
+#    volumes:
+#      - ./frontend:/app/${APP_NAME}-fe
+    ports:
+      - $FRONTEND_ADMIN_LOCAL_PORT:$FRONTEND_DOCKER_PORT
+    networks:
+      - network # Conecta este servicio a la red ${APP_NAME}-network
+
+  sigcap-backend:
+    build:
+      context: sigcap-backend/.
+      dockerfile: Dockerfile.desarrollo
+    env_file:
+      - .env
+    environment:
+      - FRONTEND_JUGADOR_URL:$FRONTEND_JUGADOR_URL
+      - FRONTEND_ADMIN_URL:$FRONTEND_ADMIN_URL
+      - FRONTEND_TABLERO_URL:$FRONTEND_TABLERO_URL  
+    image: ${APP_NAME}-backend
+    container_name: ${APP_NAME}-backend
+    volumes:
+      - ./sigcap-backend:/app/sigcap
+    ports:
+      - $BACKEND_LOCAL_PORT:$BACKEND_DOCKER_PORT
+    networks:
+      - network # Conecta este servicio a la red ${APP_NAME}-network
+
+  sigcap-pgadmin:
+    build:
+      context: ./sigcap-db/sigcap-pgadmin
+    container_name: ${APP_NAME}-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - $PGADMIN_LOCAL_PORT:$PGADMIN_DOCKER_PORT
+    networks:
+      - network
+
+  sigcap-postgres:
+    build:
+      context: ./sigcap-db/sigcap-postgres
+    container_name: ${APP_NAME}-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - $DB_LOCAL_PORT:$DB_DOCKER_PORT
+    networks:
+      - network
+
+networks:
+  network: # Define la red ${APP_NAME}-network
+    driver: bridge # Utiliza el driver de red 'bridge' por defecto
