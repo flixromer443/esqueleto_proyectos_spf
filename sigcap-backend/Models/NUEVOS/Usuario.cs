@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace sigcapbackend.Models.NUEVOS
+{
+    public class Usuario
+    {
+        public int Id { get; set; }
+        public string Nombre{ get; set; }
+        public string Contrasenia{ get; set; }
+        public Estado_usuario estado_Usuario { get; set; }
+        public Usuario()
+        {
+        }
+
+    }
+}

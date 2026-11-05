@@ -12,7 +12,11 @@ namespace sigcapbackend.Models.NUEVOS
         public Estado_operativo Estado_operativo{ get; set; }
         public Estado_afectacion Estado_afectacion { get; set; }
         public Combustible Combustible { get; set; }
-        public Vehiculo vehiculo { get; set; }
+        public Vehiculo Vehiculo { get; set; }
+        public List<Tarjeta_combustible>? Tarjetas_combustible {  get; set; }
+        public List<Dispositivo_telepase>? Dispositivos_telepase { get; set; }
+        public List<Mantenimiento>? Mantenimientos { get; set; }
+        public List<Registro_forografico>? Registros_forograficos { get; set; }
         public Ficha_tecnica()
         {
         }

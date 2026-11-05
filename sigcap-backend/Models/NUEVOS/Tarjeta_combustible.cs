@@ -17,10 +17,8 @@ namespace sigcapbackend.Models.NUEVOS
         public string Numero{ get; set; }
         public Estado_tarjeta_combustible Estado_tarjeta_combustible { get; set; }
         public Ficha_tecnica Ficha_tecnica{ get; set; }
-        public List<Agente_asociado> Agente_asociado { get; set; }
+        public List<Agente_asociado>? Agentes_asociados { get; set; }
 
-
-        public string Descripcion{ get; set; }
         public Tarjeta_combustible()
         {
         }

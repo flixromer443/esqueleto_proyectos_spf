@@ -17,8 +17,8 @@ namespace sigcapbackend.Models.NUEVOS
         public Tipo_adquisicion Tipo_adquisicion{ get; set; }
         public Codigo_presupuestario Codigo_presupuestario { get; set; }
         public Presupuesto Presupuesto{ get; set; }
-        List<Observacion_bien> Observacion_bien { get; set;}
-        List<Bien_de_uso> Bien_de_uso {  get; set;}
+        List<Observacion_bien> Observaciones { get; set;}
+        List<Bien_de_uso>? Bien_de_uso {  get; set;}
         public Bien()
         {
         }

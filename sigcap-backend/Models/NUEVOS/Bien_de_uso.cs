@@ -12,7 +12,6 @@ namespace sigcapbackend.Models.NUEVOS
         public Bien Bien{ get; set; }
         public Tipo_baja Tipo_Baja { get; set; }
         public Mueble? Mueble { get; set; }
-        List<Observacion_bien> Observacion_bien { get; set;}
         public Bien_de_uso()
         {
         }
