@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.10.12224.181 stable
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37516.0 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sigcapbackend", "sigcapbackend.csproj", "{42EBAEF1-CF4C-4B0C-9F42-CA54B06DF389}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sigcap-backend", "sigcap-backend.csproj", "{42EBAEF1-CF4C-4B0C-9F42-CA54B06DF389}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

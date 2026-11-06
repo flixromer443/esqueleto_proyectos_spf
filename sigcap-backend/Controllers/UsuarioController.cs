@@ -2,7 +2,7 @@ using Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using sigcapbackend.Models;
 using Slamdunk.WebApi.Hubs;
 
 namespace Slamdunk.Controllers;
@@ -11,11 +11,11 @@ namespace Slamdunk.Controllers;
 [Route("api/[controller]")]
 public class UsuarioController : ControllerBase
 {
-    private readonly BingoDbContext _context;
+    private readonly SigcapDbContext _context;
     private readonly IHubContext<BingoHub> _hub;
 
     public UsuarioController(
-        BingoDbContext context,
+        SigcapDbContext context,
         IHubContext<BingoHub> hub)
     {
         _context = context;

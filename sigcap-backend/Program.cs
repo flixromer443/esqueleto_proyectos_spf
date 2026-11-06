@@ -53,7 +53,7 @@ if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("pos
 
 
 // Configuraci�n de Base de Datos
-builder.Services.AddDbContext<BingoDbContext>(options =>
+builder.Services.AddDbContext<SigcapDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 // 2. Construir la aplicaci�n UNA SOLA VEZ
@@ -90,7 +90,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<BingoDbContext>();
+        var context = services.GetRequiredService<SigcapDbContext>();
 
         logger.LogInformation("Verificando si existen migraciones pendientes...");
         if (context.Database.GetPendingMigrations().Any())
