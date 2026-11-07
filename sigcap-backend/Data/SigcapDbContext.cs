@@ -59,30 +59,40 @@ namespace Data
         public DbSet<Tipo_adquisicion> Tipos_adquisicion { get; set; }
         public DbSet<Tipo_baja> Tipos_baja { get; set; }
         public DbSet<Tipo_documento_digital> Tipos_documentos_digitales { get; set; }
-        //public DbSet<Tipo_estado_historico> Tipos_estado_historicos { get; set; }
+        public DbSet<Tipo_estado_historico> Tipos_estado_historicos { get; set; }
         public DbSet<Tipo_vehiculo> Tipos_vehiculos { get; set; }
         public DbSet<Unidad> Unidades { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Vehiculo> Vehiculos { get; set; }
-        /*
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Token>()
-                .HasOne(t => t.Jugador)
-                .WithMany(j => j.Tokens)
-                .HasForeignKey(t => t.JugadorId)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Inmueble>()
+                .HasOne(i => i.codigo_Qr)
+                .WithOne(cq => cq.inmueble)
+                .HasForeignKey<Codigo_qr>("Inmueble_id") 
+                .OnDelete(DeleteBehavior.SetNull);      
 
-            modelBuilder.Entity<Premio>()
-                .HasOne(t => t.Jugador)
-                .WithMany(j => j.Premios)
-                .HasForeignKey(t => t.JugadorId)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
-        }*/
+            modelBuilder.Entity<Mueble>()
+                 .HasOne(m => m.codigo_Qr)
+                 .WithOne(cq => cq.mueble)
+                 .HasForeignKey<Codigo_qr>("Mueble_id") 
+                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Ficha_tecnica>()
+                 .HasOne(v => v.Vehiculo)
+                 .WithOne(ft=> ft.Ficha_tecnica)
+                 .HasForeignKey<Vehiculo>("Ficha_tecnica_id")
+                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Vehiculo>()
+                 .HasOne(v => v.Mueble)
+                 .WithOne(m => m.vehiculo)
+                 .HasForeignKey<Mueble>("Vehiculo_id")
+                 .OnDelete(DeleteBehavior.SetNull);
+        }
+      
     }
 }

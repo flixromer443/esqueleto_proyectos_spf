@@ -14,7 +14,7 @@ namespace sigcapbackend.Models
         public string nro_motor{ get; set; }
         public string nro_chasis{ get; set; }
         public int anio{ get; set; }
-        public Ficha_tecnica Ficha_tecnica { get; set; }
+        public Ficha_tecnica? Ficha_tecnica { get; set; }
         public Marca Marca { get; set; }
         public Modelo Modelo { get; set; }
         public Seguro seguro {  get; set; }
