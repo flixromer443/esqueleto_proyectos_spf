@@ -17,7 +17,7 @@ services:
 #    volumes:
 #      - ./frontend:/app/${APP_NAME}-fe
     ports:
-      - $FRONTEND_ADMIN_LOCAL_PORT:$FRONTEND_DOCKER_PORT
+      - $FRONTEND_LOCAL_PORT:$FRONTEND_DOCKER_PORT
     networks:
       - network # Conecta este servicio a la red ${APP_NAME}-network
 
@@ -28,9 +28,13 @@ services:
     env_file:
       - .env
     environment:
-      - FRONTEND_JUGADOR_URL:$FRONTEND_JUGADOR_URL
-      - FRONTEND_ADMIN_URL:$FRONTEND_ADMIN_URL
-      - FRONTEND_TABLERO_URL:$FRONTEND_TABLERO_URL  
+      - FRONTEND_URL:$FRONTEND_URL
+      - DB_HOST:$DB_HOST
+      - DB_PORT:$DB_PORT
+      - DB_NAME:$DB_NAME
+      - DB_USER:$DB_USER
+      - DB_PASSWORD:$DB_PASSWORD
+      
     image: ${APP_NAME}-backend
     container_name: ${APP_NAME}-backend
     volumes:
@@ -45,8 +49,8 @@ services:
       context: ./sigcap-db/sigcap-pgadmin
     container_name: ${APP_NAME}-pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - $PGADMIN_LOCAL_PORT:$PGADMIN_DOCKER_PORT
     networks:
@@ -57,6 +61,7 @@ services:
       context: ./sigcap-db/sigcap-postgres
     container_name: ${APP_NAME}-postgres
     environment:
+      DB_HOST: ${DB_HOST}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}

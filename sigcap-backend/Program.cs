@@ -2,6 +2,7 @@ using Data;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using Slamdunk.WebApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +15,7 @@ builder.Services.AddSignalR();
 
 var configuration = builder.Configuration;
 
-var frontendAdminUrl = configuration["FRONTEND_ADMIN_URL"];
-var frontendJugadorUrl = configuration["FRONTEND_JUGADOR_URL"];
-var frontendTableroUrl = configuration["FRONTEND_TABLERO_URL"];
+var frontendUrl = configuration["FRONTEND_URL"];
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -27,9 +26,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AngularApp", policyBuilder =>
     {
         policyBuilder.WithOrigins(
-            frontendAdminUrl ?? "",
-            frontendJugadorUrl ?? "",
-            frontendTableroUrl ?? ""
+            frontendUrl ?? ""
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
@@ -37,22 +34,24 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configuraci�n inteligente de la Base de Datos (Soporta formato local y URLs de Render)
-var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
-{
-    var databaseUri = new Uri(connectionString);
-    var userInfo = databaseUri.UserInfo.Split(':');
-
-    // SOLUCI�N: Si .NET devuelve -1 porque no reconoce el protocolo, le asignamos 5432
-    var dbPort = databaseUri.Port == -1 ? 5432 : databaseUri.Port;
-
-    connectionString = $"Host={databaseUri.Host};Port={dbPort};Database={databaseUri.LocalPath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Prefer;Trust Server Certificate=true";
-}
-
-
 // Configuraci�n de Base de Datos
+var dbHost = configuration["DB_HOST"];
+var dbPort = configuration["DB_PORT"];
+var dbName = configuration["DB_NAME"];
+var dbUser = configuration["DB_USER"];
+var dbPass = configuration["DB_PASSWORD"];
+
+var builderDb = new NpgsqlConnectionStringBuilder
+{
+    Host = string.IsNullOrWhiteSpace(dbHost) ? "sigcap-postgres" : dbHost,
+    Port = int.TryParse(dbPort, out var parsedPort) ? parsedPort : 5432,
+    Database = string.IsNullOrWhiteSpace(dbName) ? "SIGCAP_V02" : dbName,
+    Username = string.IsNullOrWhiteSpace(dbUser) ? "admin" : dbUser,
+    Password = string.IsNullOrWhiteSpace(dbPass) ? "admin" : dbPass
+};
+
+var connectionString = builderDb.ConnectionString;
+
 builder.Services.AddDbContext<SigcapDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -65,8 +64,8 @@ logger.LogInformation("======================================");
 logger.LogInformation("INICIANDO BACKEND");
 logger.LogInformation("======================================");
 logger.LogInformation("Environment: {Environment}", app.Environment.EnvironmentName);
-logger.LogInformation("FRONTEND_URL: {FrontendAdminUrl}", frontendAdminUrl);
-logger.LogInformation("Connection string configurada correctamente");
+logger.LogInformation("FRONTEND_URL: {frontendUrl}", frontendUrl);
+logger.LogInformation("Connection string configurada correctamente");   
 logger.LogInformation("======================================");
 
 // 4. Configurar el Pipeline HTTP (�El orden de los Use... importa much�simo!)
