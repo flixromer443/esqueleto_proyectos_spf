@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace sigcapbackend.Migrations
 {
     /// <inheritdoc />
-    public partial class migracion_1 : Migration
+    public partial class migracion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,8 @@ namespace sigcapbackend.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Codigo = table.Column<string>(type: "text", nullable: false)
+                    Codigo = table.Column<int>(type: "integer", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,6 +63,19 @@ namespace sigcapbackend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Estados_alerta_recuento_fisico", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Estados_bienes_de_uso",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Estado = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Estados_bienes_de_uso", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,6 +313,27 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clases",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Cod_clase = table.Column<int>(type: "integer", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: false),
+                    Codigo_presupuestarioId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clases_Codigos_presupuestarios_Codigo_presupuestarioId",
+                        column: x => x.Codigo_presupuestarioId,
+                        principalTable: "Codigos_presupuestarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Presupuestos",
                 columns: table => new
                 {
@@ -351,27 +386,6 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nombre = table.Column<string>(type: "text", nullable: false),
-                    Contrasenia = table.Column<string>(type: "text", nullable: false),
-                    estado_UsuarioId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Estados_usuarios_estado_UsuarioId",
-                        column: x => x.estado_UsuarioId,
-                        principalTable: "Estados_usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Modelos",
                 columns: table => new
                 {
@@ -387,6 +401,34 @@ namespace sigcapbackend.Migrations
                         name: "FK_Modelos_Marcas_MarcaId",
                         column: x => x.MarcaId,
                         principalTable: "Marcas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Contrasenia = table.Column<string>(type: "text", nullable: false),
+                    perfilId = table.Column<int>(type: "integer", nullable: false),
+                    estado_UsuarioId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Estados_usuarios_estado_UsuarioId",
+                        column: x => x.estado_UsuarioId,
+                        principalTable: "Estados_usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Perfiles_perfilId",
+                        column: x => x.perfilId,
+                        principalTable: "Perfiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -413,6 +455,33 @@ namespace sigcapbackend.Migrations
                         name: "FK_Rel_perfiles_roles_Roles_rolId",
                         column: x => x.rolId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inmuebles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Latitud = table.Column<string>(type: "text", nullable: false),
+                    Longitud = table.Column<string>(type: "text", nullable: false),
+                    Calle = table.Column<string>(type: "text", nullable: false),
+                    Entre_calle_1 = table.Column<string>(type: "text", nullable: false),
+                    Entre_calle_2 = table.Column<string>(type: "text", nullable: false),
+                    Provincia = table.Column<string>(type: "text", nullable: false),
+                    Numero = table.Column<int>(type: "integer", nullable: false),
+                    Cod_postal = table.Column<string>(type: "text", nullable: false),
+                    situacion_DominialId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inmuebles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inmuebles_Situaciones_dominiales_situacion_DominialId",
+                        column: x => x.situacion_DominialId,
+                        principalTable: "Situaciones_dominiales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -461,6 +530,27 @@ namespace sigcapbackend.Migrations
                         name: "FK_Alertas_recuento_fisico_Unidades_UnidadId",
                         column: x => x.UnidadId,
                         principalTable: "Unidades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subclases",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Cod_subclase = table.Column<int>(type: "integer", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: false),
+                    claseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subclases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subclases_Clases_claseId",
+                        column: x => x.claseId,
+                        principalTable: "Clases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -559,6 +649,126 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vehiculos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Dominio = table.Column<string>(type: "text", nullable: false),
+                    kilometraje = table.Column<double>(type: "double precision", nullable: false),
+                    nro_motor = table.Column<string>(type: "text", nullable: false),
+                    nro_chasis = table.Column<string>(type: "text", nullable: false),
+                    anio = table.Column<int>(type: "integer", nullable: false),
+                    Ficha_tecnica_id = table.Column<int>(type: "integer", nullable: true),
+                    MarcaId = table.Column<int>(type: "integer", nullable: false),
+                    ModeloId = table.Column<int>(type: "integer", nullable: false),
+                    seguroId = table.Column<int>(type: "integer", nullable: false),
+                    Tipo_vehiculoId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vehiculos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vehiculos_Fichas_tecnicas_Ficha_tecnica_id",
+                        column: x => x.Ficha_tecnica_id,
+                        principalTable: "Fichas_tecnicas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Vehiculos_Marcas_MarcaId",
+                        column: x => x.MarcaId,
+                        principalTable: "Marcas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Vehiculos_Modelos_ModeloId",
+                        column: x => x.ModeloId,
+                        principalTable: "Modelos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Vehiculos_Seguros_seguroId",
+                        column: x => x.seguroId,
+                        principalTable: "Seguros",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Vehiculos_Tipos_vehiculos_Tipo_vehiculoId",
+                        column: x => x.Tipo_vehiculoId,
+                        principalTable: "Tipos_vehiculos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Historicos_estado_afectacion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    usuarioId = table.Column<int>(type: "integer", nullable: false),
+                    ficha_tecnicaId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Historicos_estado_afectacion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_afectacion_Estados_afectacion_EstadoId",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados_afectacion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_afectacion_Fichas_tecnicas_ficha_tecnicaId",
+                        column: x => x.ficha_tecnicaId,
+                        principalTable: "Fichas_tecnicas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_afectacion_Usuarios_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Historicos_estado_operativo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    usuarioId = table.Column<int>(type: "integer", nullable: false),
+                    ficha_tecnicaId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Historicos_estado_operativo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_operativo_Estados_operativos_EstadoId",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados_operativos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_operativo_Fichas_tecnicas_ficha_tecnicaId",
+                        column: x => x.ficha_tecnicaId,
+                        principalTable: "Fichas_tecnicas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_operativo_Usuarios_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Historicos_estado_sesion",
                 columns: table => new
                 {
@@ -613,53 +823,83 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vehiculos",
+                name: "Documentos_digitales",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Dominio = table.Column<string>(type: "text", nullable: false),
-                    kilometraje = table.Column<double>(type: "double precision", nullable: false),
-                    nro_motor = table.Column<string>(type: "text", nullable: false),
-                    nro_chasis = table.Column<string>(type: "text", nullable: false),
-                    anio = table.Column<int>(type: "integer", nullable: false),
-                    Ficha_tecnica_id = table.Column<int>(type: "integer", nullable: true),
-                    MarcaId = table.Column<int>(type: "integer", nullable: false),
-                    ModeloId = table.Column<int>(type: "integer", nullable: false),
-                    seguroId = table.Column<int>(type: "integer", nullable: false),
-                    Tipo_vehiculoId = table.Column<int>(type: "integer", nullable: false)
+                    Descripcion = table.Column<string>(type: "text", nullable: false),
+                    Uri_archivo = table.Column<string>(type: "text", nullable: false),
+                    TipoId = table.Column<int>(type: "integer", nullable: false),
+                    InmuebleId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vehiculos", x => x.Id);
+                    table.PrimaryKey("PK_Documentos_digitales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Vehiculos_Fichas_tecnicas_Ficha_tecnica_id",
-                        column: x => x.Ficha_tecnica_id,
-                        principalTable: "Fichas_tecnicas",
+                        name: "FK_Documentos_digitales_Inmuebles_InmuebleId",
+                        column: x => x.InmuebleId,
+                        principalTable: "Inmuebles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Documentos_digitales_Tipos_documentos_digitales_TipoId",
+                        column: x => x.TipoId,
+                        principalTable: "Tipos_documentos_digitales",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Historicos_situacion_dominial",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    usuarioId = table.Column<int>(type: "integer", nullable: false),
+                    inmuebleId = table.Column<int>(type: "integer", nullable: false),
+                    SituacionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Historicos_situacion_dominial", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Vehiculos_Marcas_MarcaId",
-                        column: x => x.MarcaId,
-                        principalTable: "Marcas",
+                        name: "FK_Historicos_situacion_dominial_Inmuebles_inmuebleId",
+                        column: x => x.inmuebleId,
+                        principalTable: "Inmuebles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Vehiculos_Modelos_ModeloId",
-                        column: x => x.ModeloId,
-                        principalTable: "Modelos",
+                        name: "FK_Historicos_situacion_dominial_Situaciones_dominiales_Situac~",
+                        column: x => x.SituacionId,
+                        principalTable: "Situaciones_dominiales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Vehiculos_Seguros_seguroId",
-                        column: x => x.seguroId,
-                        principalTable: "Seguros",
+                        name: "FK_Historicos_situacion_dominial_Usuarios_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Observaciones_inmueble",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Titulo = table.Column<string>(type: "text", nullable: false),
+                    Observacion = table.Column<string>(type: "text", nullable: false),
+                    MuebleId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Observaciones_inmueble", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Vehiculos_Tipos_vehiculos_Tipo_vehiculoId",
-                        column: x => x.Tipo_vehiculoId,
-                        principalTable: "Tipos_vehiculos",
+                        name: "FK_Observaciones_inmueble_Inmuebles_MuebleId",
+                        column: x => x.MuebleId,
+                        principalTable: "Inmuebles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -716,7 +956,8 @@ namespace sigcapbackend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     usuarioId = table.Column<int>(type: "integer", nullable: false),
-                    AlertaId = table.Column<int>(type: "integer", nullable: false)
+                    AlertaId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -728,7 +969,47 @@ namespace sigcapbackend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Historicos_estado_alerta_recuento_fisico_Estados_alerta_rec~",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados_alerta_recuento_fisico",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Historicos_estado_alerta_recuento_fisico_Usuarios_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Historicos_estado_dispositivo_telepase",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    usuarioId = table.Column<int>(type: "integer", nullable: false),
+                    dispositivo_telepaseId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Historicos_estado_dispositivo_telepase", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_dispositivo_telepase_Dispositivos_telepas~",
+                        column: x => x.dispositivo_telepaseId,
+                        principalTable: "Dispositivos_telepase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_dispositivo_telepase_Estados_dispositivos~",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados_dispositivos_telepase",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_dispositivo_telepase_Usuarios_usuarioId",
                         column: x => x.usuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -755,36 +1036,37 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Inmuebles",
+                name: "Historicos_estado_tarjeta_combustible",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Latitud = table.Column<string>(type: "text", nullable: false),
-                    Longitud = table.Column<string>(type: "text", nullable: false),
-                    Calle = table.Column<string>(type: "text", nullable: false),
-                    Entre_calle_1 = table.Column<string>(type: "text", nullable: false),
-                    Entre_calle_2 = table.Column<string>(type: "text", nullable: false),
-                    Provincia = table.Column<string>(type: "text", nullable: false),
-                    Numero = table.Column<int>(type: "integer", nullable: false),
-                    Cod_postal = table.Column<string>(type: "text", nullable: false),
-                    vehiculoId = table.Column<int>(type: "integer", nullable: true),
-                    situacion_DominialId = table.Column<int>(type: "integer", nullable: false)
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    usuarioId = table.Column<int>(type: "integer", nullable: false),
+                    tarjeta_combustibleId = table.Column<int>(type: "integer", nullable: false),
+                    EstadoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Inmuebles", x => x.Id);
+                    table.PrimaryKey("PK_Historicos_estado_tarjeta_combustible", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Inmuebles_Situaciones_dominiales_situacion_DominialId",
-                        column: x => x.situacion_DominialId,
-                        principalTable: "Situaciones_dominiales",
+                        name: "FK_Historicos_estado_tarjeta_combustible_Estados_tarjetas_comb~",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados_tarjetas_combustible",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Inmuebles_Vehiculos_vehiculoId",
-                        column: x => x.vehiculoId,
-                        principalTable: "Vehiculos",
-                        principalColumn: "Id");
+                        name: "FK_Historicos_estado_tarjeta_combustible_Tarjetas_combustible_~",
+                        column: x => x.tarjeta_combustibleId,
+                        principalTable: "Tarjetas_combustible",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_estado_tarjeta_combustible_Usuarios_usuarioId",
+                        column: x => x.usuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -828,54 +1110,6 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Documentos_digitales",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Descripcion = table.Column<string>(type: "text", nullable: false),
-                    Uri_archivo = table.Column<string>(type: "text", nullable: false),
-                    TipoId = table.Column<int>(type: "integer", nullable: false),
-                    InmuebleId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Documentos_digitales", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Documentos_digitales_Inmuebles_InmuebleId",
-                        column: x => x.InmuebleId,
-                        principalTable: "Inmuebles",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Documentos_digitales_Tipos_documentos_digitales_TipoId",
-                        column: x => x.TipoId,
-                        principalTable: "Tipos_documentos_digitales",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Observaciones_inmueble",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Titulo = table.Column<string>(type: "text", nullable: false),
-                    Observacion = table.Column<string>(type: "text", nullable: false),
-                    MuebleId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Observaciones_inmueble", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Observaciones_inmueble_Inmuebles_MuebleId",
-                        column: x => x.MuebleId,
-                        principalTable: "Inmuebles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Registros_forograficos",
                 columns: table => new
                 {
@@ -914,7 +1148,8 @@ namespace sigcapbackend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BienId = table.Column<int>(type: "integer", nullable: false),
                     Tipo_BajaId = table.Column<int>(type: "integer", nullable: false),
-                    MuebleId = table.Column<int>(type: "integer", nullable: true)
+                    MuebleId = table.Column<int>(type: "integer", nullable: true),
+                    InmuebleId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -925,6 +1160,11 @@ namespace sigcapbackend.Migrations
                         principalTable: "Bienes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bienes_de_uso_Inmuebles_InmuebleId",
+                        column: x => x.InmuebleId,
+                        principalTable: "Inmuebles",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bienes_de_uso_Muebles_MuebleId",
                         column: x => x.MuebleId,
@@ -1000,6 +1240,8 @@ namespace sigcapbackend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Unidad_actualId = table.Column<int>(type: "integer", nullable: false),
+                    Unidad_anteriorId = table.Column<int>(type: "integer", nullable: false),
                     usuarioId = table.Column<int>(type: "integer", nullable: false),
                     bienId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -1013,6 +1255,18 @@ namespace sigcapbackend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Historicos_cambio_unidad_bien_de_uso_Unidades_Unidad_actual~",
+                        column: x => x.Unidad_actualId,
+                        principalTable: "Unidades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Historicos_cambio_unidad_bien_de_uso_Unidades_Unidad_anteri~",
+                        column: x => x.Unidad_anteriorId,
+                        principalTable: "Unidades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Historicos_cambio_unidad_bien_de_uso_Usuarios_usuarioId",
                         column: x => x.usuarioId,
                         principalTable: "Usuarios",
@@ -1021,135 +1275,33 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Historicos_estado_afectacion",
+                name: "Historicos_estado_bien_de_uso",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     usuarioId = table.Column<int>(type: "integer", nullable: false),
-                    bienId = table.Column<int>(type: "integer", nullable: false),
+                    bien_de_usoId = table.Column<int>(type: "integer", nullable: false),
                     EstadoId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Historicos_estado_afectacion", x => x.Id);
+                    table.PrimaryKey("PK_Historicos_estado_bien_de_uso", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Historicos_estado_afectacion_Bienes_de_uso_bienId",
-                        column: x => x.bienId,
+                        name: "FK_Historicos_estado_bien_de_uso_Bienes_de_uso_bien_de_usoId",
+                        column: x => x.bien_de_usoId,
                         principalTable: "Bienes_de_uso",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Historicos_estado_afectacion_Estados_afectacion_EstadoId",
+                        name: "FK_Historicos_estado_bien_de_uso_Estados_bienes_de_uso_EstadoId",
                         column: x => x.EstadoId,
-                        principalTable: "Estados_afectacion",
+                        principalTable: "Estados_bienes_de_uso",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Historicos_estado_afectacion_Usuarios_usuarioId",
-                        column: x => x.usuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Historicos_estado_operativo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    usuarioId = table.Column<int>(type: "integer", nullable: false),
-                    bienId = table.Column<int>(type: "integer", nullable: false),
-                    EstadoId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Historicos_estado_operativo", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Historicos_estado_operativo_Bienes_de_uso_bienId",
-                        column: x => x.bienId,
-                        principalTable: "Bienes_de_uso",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Historicos_estado_operativo_Estados_operativos_EstadoId",
-                        column: x => x.EstadoId,
-                        principalTable: "Estados_operativos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Historicos_estado_operativo_Usuarios_usuarioId",
-                        column: x => x.usuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Historicos_estado_tarjeta_combustible",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    usuarioId = table.Column<int>(type: "integer", nullable: false),
-                    bienId = table.Column<int>(type: "integer", nullable: false),
-                    EstadoId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Historicos_estado_tarjeta_combustible", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Historicos_estado_tarjeta_combustible_Bienes_de_uso_bienId",
-                        column: x => x.bienId,
-                        principalTable: "Bienes_de_uso",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Historicos_estado_tarjeta_combustible_Estados_tarjetas_comb~",
-                        column: x => x.EstadoId,
-                        principalTable: "Estados_tarjetas_combustible",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Historicos_estado_tarjeta_combustible_Usuarios_usuarioId",
-                        column: x => x.usuarioId,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Historicos_situacion_dominial",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    usuarioId = table.Column<int>(type: "integer", nullable: false),
-                    bienId = table.Column<int>(type: "integer", nullable: false),
-                    SituacionId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Historicos_situacion_dominial", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Historicos_situacion_dominial_Bienes_de_uso_bienId",
-                        column: x => x.bienId,
-                        principalTable: "Bienes_de_uso",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Historicos_situacion_dominial_Situaciones_dominiales_Situac~",
-                        column: x => x.SituacionId,
-                        principalTable: "Situaciones_dominiales",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Historicos_situacion_dominial_Usuarios_usuarioId",
+                        name: "FK_Historicos_estado_bien_de_uso_Usuarios_usuarioId",
                         column: x => x.usuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -1197,6 +1349,11 @@ namespace sigcapbackend.Migrations
                 column: "BienId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bienes_de_uso_InmuebleId",
+                table: "Bienes_de_uso",
+                column: "InmuebleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bienes_de_uso_MuebleId",
                 table: "Bienes_de_uso",
                 column: "MuebleId");
@@ -1205,6 +1362,11 @@ namespace sigcapbackend.Migrations
                 name: "IX_Bienes_de_uso_Tipo_BajaId",
                 table: "Bienes_de_uso",
                 column: "Tipo_BajaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clases_Codigo_presupuestarioId",
+                table: "Clases",
+                column: "Codigo_presupuestarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Codigos_qr_Inmueble_id",
@@ -1259,19 +1421,29 @@ namespace sigcapbackend.Migrations
                 column: "bienId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Historicos_cambio_unidad_bien_de_uso_Unidad_actualId",
+                table: "Historicos_cambio_unidad_bien_de_uso",
+                column: "Unidad_actualId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_cambio_unidad_bien_de_uso_Unidad_anteriorId",
+                table: "Historicos_cambio_unidad_bien_de_uso",
+                column: "Unidad_anteriorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Historicos_cambio_unidad_bien_de_uso_usuarioId",
                 table: "Historicos_cambio_unidad_bien_de_uso",
                 column: "usuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Historicos_estado_afectacion_bienId",
-                table: "Historicos_estado_afectacion",
-                column: "bienId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_afectacion_EstadoId",
                 table: "Historicos_estado_afectacion",
                 column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_afectacion_ficha_tecnicaId",
+                table: "Historicos_estado_afectacion",
+                column: "ficha_tecnicaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_afectacion_usuarioId",
@@ -1284,19 +1456,54 @@ namespace sigcapbackend.Migrations
                 column: "AlertaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_alerta_recuento_fisico_EstadoId",
+                table: "Historicos_estado_alerta_recuento_fisico",
+                column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_alerta_recuento_fisico_usuarioId",
                 table: "Historicos_estado_alerta_recuento_fisico",
                 column: "usuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Historicos_estado_operativo_bienId",
-                table: "Historicos_estado_operativo",
-                column: "bienId");
+                name: "IX_Historicos_estado_bien_de_uso_bien_de_usoId",
+                table: "Historicos_estado_bien_de_uso",
+                column: "bien_de_usoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_bien_de_uso_EstadoId",
+                table: "Historicos_estado_bien_de_uso",
+                column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_bien_de_uso_usuarioId",
+                table: "Historicos_estado_bien_de_uso",
+                column: "usuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_dispositivo_telepase_dispositivo_telepase~",
+                table: "Historicos_estado_dispositivo_telepase",
+                column: "dispositivo_telepaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_dispositivo_telepase_EstadoId",
+                table: "Historicos_estado_dispositivo_telepase",
+                column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_dispositivo_telepase_usuarioId",
+                table: "Historicos_estado_dispositivo_telepase",
+                column: "usuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_operativo_EstadoId",
                 table: "Historicos_estado_operativo",
                 column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_operativo_ficha_tecnicaId",
+                table: "Historicos_estado_operativo",
+                column: "ficha_tecnicaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_operativo_usuarioId",
@@ -1314,14 +1521,14 @@ namespace sigcapbackend.Migrations
                 column: "usuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Historicos_estado_tarjeta_combustible_bienId",
-                table: "Historicos_estado_tarjeta_combustible",
-                column: "bienId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_tarjeta_combustible_EstadoId",
                 table: "Historicos_estado_tarjeta_combustible",
                 column: "EstadoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historicos_estado_tarjeta_combustible_tarjeta_combustibleId",
+                table: "Historicos_estado_tarjeta_combustible",
+                column: "tarjeta_combustibleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Historicos_estado_tarjeta_combustible_usuarioId",
@@ -1339,9 +1546,9 @@ namespace sigcapbackend.Migrations
                 column: "usuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Historicos_situacion_dominial_bienId",
+                name: "IX_Historicos_situacion_dominial_inmuebleId",
                 table: "Historicos_situacion_dominial",
-                column: "bienId");
+                column: "inmuebleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Historicos_situacion_dominial_SituacionId",
@@ -1357,11 +1564,6 @@ namespace sigcapbackend.Migrations
                 name: "IX_Inmuebles_situacion_DominialId",
                 table: "Inmuebles",
                 column: "situacion_DominialId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Inmuebles_vehiculoId",
-                table: "Inmuebles",
-                column: "vehiculoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mantenimientos_Ficha_tecnicaId",
@@ -1435,6 +1637,11 @@ namespace sigcapbackend.Migrations
                 column: "rolId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Subclases_claseId",
+                table: "Subclases",
+                column: "claseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Subtipos_adquisicion_Tipo_AdquisicionId",
                 table: "Subtipos_adquisicion",
                 column: "Tipo_AdquisicionId");
@@ -1453,6 +1660,11 @@ namespace sigcapbackend.Migrations
                 name: "IX_Usuarios_estado_UsuarioId",
                 table: "Usuarios",
                 column: "estado_UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_perfilId",
+                table: "Usuarios",
+                column: "perfilId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehiculos_Ficha_tecnica_id",
@@ -1491,9 +1703,6 @@ namespace sigcapbackend.Migrations
                 name: "Codigos_qr");
 
             migrationBuilder.DropTable(
-                name: "Dispositivos_telepase");
-
-            migrationBuilder.DropTable(
                 name: "Documentos_digitales");
 
             migrationBuilder.DropTable(
@@ -1504,6 +1713,12 @@ namespace sigcapbackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Historicos_estado_alerta_recuento_fisico");
+
+            migrationBuilder.DropTable(
+                name: "Historicos_estado_bien_de_uso");
+
+            migrationBuilder.DropTable(
+                name: "Historicos_estado_dispositivo_telepase");
 
             migrationBuilder.DropTable(
                 name: "Historicos_estado_operativo");
@@ -1539,13 +1754,10 @@ namespace sigcapbackend.Migrations
                 name: "Rel_perfiles_roles");
 
             migrationBuilder.DropTable(
+                name: "Subclases");
+
+            migrationBuilder.DropTable(
                 name: "Tipos_estado_historicos");
-
-            migrationBuilder.DropTable(
-                name: "Tarjetas_combustible");
-
-            migrationBuilder.DropTable(
-                name: "Estados_dispositivos_telepase");
 
             migrationBuilder.DropTable(
                 name: "Tipos_documentos_digitales");
@@ -1554,10 +1766,19 @@ namespace sigcapbackend.Migrations
                 name: "Alertas_recuento_fisico");
 
             migrationBuilder.DropTable(
+                name: "Bienes_de_uso");
+
+            migrationBuilder.DropTable(
+                name: "Estados_bienes_de_uso");
+
+            migrationBuilder.DropTable(
+                name: "Dispositivos_telepase");
+
+            migrationBuilder.DropTable(
                 name: "Estados_sesion");
 
             migrationBuilder.DropTable(
-                name: "Bienes_de_uso");
+                name: "Tarjetas_combustible");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
@@ -1566,16 +1787,10 @@ namespace sigcapbackend.Migrations
                 name: "Talleres_mecanicos");
 
             migrationBuilder.DropTable(
-                name: "Inmuebles");
-
-            migrationBuilder.DropTable(
-                name: "Perfiles");
-
-            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Estados_tarjetas_combustible");
+                name: "Clases");
 
             migrationBuilder.DropTable(
                 name: "Estados_alerta_recuento_fisico");
@@ -1587,22 +1802,34 @@ namespace sigcapbackend.Migrations
                 name: "Bienes");
 
             migrationBuilder.DropTable(
+                name: "Inmuebles");
+
+            migrationBuilder.DropTable(
                 name: "Muebles");
 
             migrationBuilder.DropTable(
                 name: "Tipos_baja");
 
             migrationBuilder.DropTable(
+                name: "Estados_dispositivos_telepase");
+
+            migrationBuilder.DropTable(
+                name: "Estados_tarjetas_combustible");
+
+            migrationBuilder.DropTable(
                 name: "Estados_usuarios");
 
             migrationBuilder.DropTable(
-                name: "Situaciones_dominiales");
+                name: "Perfiles");
 
             migrationBuilder.DropTable(
                 name: "Presupuestos");
 
             migrationBuilder.DropTable(
                 name: "Subtipos_adquisicion");
+
+            migrationBuilder.DropTable(
+                name: "Situaciones_dominiales");
 
             migrationBuilder.DropTable(
                 name: "Vehiculos");

@@ -9,7 +9,9 @@ namespace sigcapbackend.Models
     public class Codigo_presupuestario
     {
         public int Id { get; set; }
-        public string Codigo{ get; set; }
+        public int Codigo{ get; set; }
+        public string Descripcion{ get; set; }
+        public List<Clase>? Clases { get; set; }
         public Codigo_presupuestario()
         {
         }

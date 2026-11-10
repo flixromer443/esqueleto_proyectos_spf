@@ -11,6 +11,7 @@ namespace sigcapbackend.Models
         public int Id { get; set; }
         public string Nombre{ get; set; }
         public string Contrasenia{ get; set; }
+        public Perfil perfil { get; set; }
         public Estado_usuario estado_Usuario { get; set; }
         public Usuario()
         {

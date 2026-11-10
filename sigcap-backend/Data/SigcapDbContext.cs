@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-//using Models;
 using sigcapbackend.Models;
-//using Slamdunk.WebApi.Models;
+using System.Collections.Generic;
 using System.Reflection.Emit;
 
 namespace Data
@@ -17,6 +16,7 @@ namespace Data
         public DbSet<Alerta_recuento_fisico> Alertas_recuento_fisico{ get; set; }
         public DbSet<Bien> Bienes { get; set; }
         public DbSet<Bien_de_uso> Bienes_de_uso { get; set; }
+        public DbSet<Clase> Clases{ get; set; }
         public DbSet<Codigo_presupuestario> Codigos_presupuestarios { get; set; }
         public DbSet<Codigo_qr> Codigos_qr { get; set; }
         public DbSet <Combustible> Combustibles { get; set; }
@@ -24,6 +24,7 @@ namespace Data
         public DbSet<Documento_digital> Documentos_digitales { get; set; }
         public DbSet<Estado_afectacion> Estados_afectacion { get; set; }
         public DbSet<Estado_alerta_recuento_fisico> Estados_alerta_recuento_fisico { get; set; }
+        public DbSet<Estado_bien_de_uso> Estados_bienes_de_uso{ get; set; }
         public DbSet<Estado_dispositivo_telepase> Estados_dispositivos_telepase { get; set; }
         public DbSet<Estado_operativo> Estados_operativos { get; set; }
         public DbSet<Estado_sesion> Estados_sesion{ get; set; }
@@ -33,6 +34,8 @@ namespace Data
         public DbSet<Historico_cambio_unidad_bien_de_uso> Historicos_cambio_unidad_bien_de_uso { get; set; }
         public DbSet<Historico_estado_afectacion> Historicos_estado_afectacion { get; set; }
         public DbSet<Historico_estado_alerta_recuento_fisico> Historicos_estado_alerta_recuento_fisico { get; set; }
+        public DbSet<Historico_estado_bien_de_uso> Historicos_estado_bien_de_uso { get; set; }
+        public DbSet<Historico_estado_dispositivo_telepase> Historicos_estado_dispositivo_telepase { get; set; }
         public DbSet<Historico_estado_operativo> Historicos_estado_operativo { get; set; }
         public DbSet<Historico_estado_sesion> Historicos_estado_sesion { get; set; }
         public DbSet<Historico_estado_tarjeta_combustible> Historicos_estado_tarjeta_combustible { get; set; }
@@ -53,6 +56,7 @@ namespace Data
         public DbSet<Rol> Roles { get; set; }
         public DbSet<Seguro> Seguros { get; set; }
         public DbSet<Situacion_dominial> Situaciones_dominiales { get; set; }
+        public DbSet<Subclase> Subclases{ get; set; }
         public DbSet<Subtipo_adquisicion> Subtipos_adquisicion { get; set; }
         public DbSet<Taller_mecanico> Talleres_mecanicos { get; set; }
         public DbSet<Tarjeta_combustible> Tarjetas_combustible { get; set; }

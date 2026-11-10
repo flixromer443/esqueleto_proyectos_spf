@@ -12,6 +12,7 @@ namespace sigcapbackend.Models
         public DateTime Fecha { get; set; }
         public Usuario usuario { get; set; }
         public Alerta_recuento_fisico Alerta{  get; set; }
+        public Estado_alerta_recuento_fisico Estado{ get; set; }
         public Historico_estado_alerta_recuento_fisico()
         {
         }

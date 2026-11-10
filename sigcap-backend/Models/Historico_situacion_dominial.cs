@@ -11,7 +11,7 @@ namespace sigcapbackend.Models
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public Usuario usuario { get; set; }
-        public Bien_de_uso bien {  get; set; }
+        public Inmueble inmueble{  get; set; }
         public Situacion_dominial Situacion{ get; set; }
         public Historico_situacion_dominial()
         {

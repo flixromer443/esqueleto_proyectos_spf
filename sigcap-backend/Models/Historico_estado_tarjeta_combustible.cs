@@ -11,7 +11,7 @@ namespace sigcapbackend.Models
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public Usuario usuario { get; set; }
-        public Bien_de_uso bien {  get; set; }
+        public Tarjeta_combustible tarjeta_combustible{  get; set; }
         public Estado_tarjeta_combustible Estado{ get; set; }
         public Historico_estado_tarjeta_combustible()
         {
