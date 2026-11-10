@@ -14,7 +14,6 @@ namespace sigcapbackend.Models
         public string Numero { get; set; }
         public Ficha_tecnica Ficha_tecnica { get; set; }
         public Estado_dispositivo_telepase Estado_dispositivo_telepase { get; set; }
-        public string Descripcion{ get; set; }
         public Dispositivo_telepase()
         {
         }

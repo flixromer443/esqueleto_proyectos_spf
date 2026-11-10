@@ -19,9 +19,9 @@ namespace sigcapbackend.Models
         public string Cod_postal{ get; set; }
         public Codigo_qr? codigo_Qr { get; set; }
         public Situacion_dominial situacion_Dominial { get; set; }
-        public List<Observacion_mueble>? Observaciones{ get; set;}
+        public List<Observacion_inmueble>? Observaciones{ get; set;}
         public List<Documento_digital>? Documentos_digitales { get; set;}
-        public List<Registro_forografico>? Registros_fotograficos { get; set;}
+        public List<Registro_fotografico>? Registros_fotograficos { get; set;}
         public Inmueble()
         {
         }

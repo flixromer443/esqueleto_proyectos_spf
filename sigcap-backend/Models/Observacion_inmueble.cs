@@ -11,7 +11,7 @@ namespace sigcapbackend.Models
         public int Id { get; set; }
         public string Titulo{ get; set; }
         public string Observacion { get; set; }
-        public Inmueble Mueble{ get; set; }
+        public Inmueble Inmueble{ get; set; }
         public Observacion_inmueble()
         {
         }

@@ -15,8 +15,6 @@ namespace sigcapbackend.Models
         public int Kilometraje{ get; set; }
         public Ficha_tecnica Ficha_tecnica { get; set; }
         public Taller_mecanico Taller_mecanico { get; set; }
-
-        public string Descripcion{ get; set; }
         public Mantenimiento()
         {
         }

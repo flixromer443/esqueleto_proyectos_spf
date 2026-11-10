@@ -51,7 +51,7 @@ namespace Data
         public DbSet<Observacion_mueble> Observaciones_muebles { get; set; }
         public DbSet<Perfil> Perfiles { get; set; }
         public DbSet<Presupuesto> Presupuestos { get; set; }
-        public DbSet<Registro_forografico> Registros_forograficos { get; set; }
+        public DbSet<Registro_fotografico> Registros_forograficos { get; set; }
         public DbSet<Rel_perfil_rol> Rel_perfiles_roles { get; set; }
         public DbSet<Rol> Roles { get; set; }
         public DbSet<Seguro> Seguros { get; set; }
@@ -68,6 +68,7 @@ namespace Data
         public DbSet<Unidad> Unidades { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Vehiculo> Vehiculos { get; set; }
+        public DbSet<Vida_util> Vidas_utiles{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -95,6 +96,12 @@ namespace Data
                  .HasOne(v => v.Mueble)
                  .WithOne(m => m.vehiculo)
                  .HasForeignKey<Mueble>("Vehiculo_id")
+                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Vida_util>()
+                 .HasOne(vu => vu.codigo_presupuestario)
+                 .WithOne(cp => cp.vida_util)
+                 .HasForeignKey<Codigo_presupuestario>("Vida_util_id")
                  .OnDelete(DeleteBehavior.SetNull);
         }
       
