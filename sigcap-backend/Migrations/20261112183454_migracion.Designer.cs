@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace sigcapbackend.Migrations
 {
     [DbContext(typeof(SigcapDbContext))]
-    [Migration("20261112153853_migracion")]
+    [Migration("20261112183454_migracion")]
     partial class migracion
     {
         /// <inheritdoc />
@@ -1075,9 +1075,6 @@ namespace sigcapbackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("MuebleId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Uri_imagen")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1088,13 +1085,16 @@ namespace sigcapbackend.Migrations
                     b.Property<int?>("ficha_TecnicaId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("inmuebleId")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("MuebleId");
+                    b.HasKey("Id");
 
                     b.HasIndex("bienId");
 
                     b.HasIndex("ficha_TecnicaId");
+
+                    b.HasIndex("inmuebleId");
 
                     b.ToTable("Registros_forograficos");
                 });
@@ -2110,10 +2110,6 @@ namespace sigcapbackend.Migrations
 
             modelBuilder.Entity("sigcapbackend.Models.Registro_fotografico", b =>
                 {
-                    b.HasOne("sigcapbackend.Models.Inmueble", "Mueble")
-                        .WithMany("Registros_fotograficos")
-                        .HasForeignKey("MuebleId");
-
                     b.HasOne("sigcapbackend.Models.Bien", "bien")
                         .WithMany("Registros_fotograficos")
                         .HasForeignKey("bienId");
@@ -2122,11 +2118,15 @@ namespace sigcapbackend.Migrations
                         .WithMany("Registros_forograficos")
                         .HasForeignKey("ficha_TecnicaId");
 
-                    b.Navigation("Mueble");
+                    b.HasOne("sigcapbackend.Models.Inmueble", "inmueble")
+                        .WithMany("Registros_fotograficos")
+                        .HasForeignKey("inmuebleId");
 
                     b.Navigation("bien");
 
                     b.Navigation("ficha_Tecnica");
+
+                    b.Navigation("inmueble");
                 });
 
             modelBuilder.Entity("sigcapbackend.Models.Rel_perfil_rol", b =>

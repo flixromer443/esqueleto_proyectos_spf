@@ -1253,7 +1253,7 @@ namespace sigcapbackend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Uri_imagen = table.Column<string>(type: "text", nullable: false),
-                    MuebleId = table.Column<int>(type: "integer", nullable: true),
+                    inmuebleId = table.Column<int>(type: "integer", nullable: true),
                     bienId = table.Column<int>(type: "integer", nullable: true),
                     ficha_TecnicaId = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -1271,8 +1271,8 @@ namespace sigcapbackend.Migrations
                         principalTable: "Fichas_tecnicas",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Registros_forograficos_Inmuebles_MuebleId",
-                        column: x => x.MuebleId,
+                        name: "FK_Registros_forograficos_Inmuebles_inmuebleId",
+                        column: x => x.inmuebleId,
                         principalTable: "Inmuebles",
                         principalColumn: "Id");
                 });
@@ -1687,9 +1687,9 @@ namespace sigcapbackend.Migrations
                 column: "ficha_TecnicaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Registros_forograficos_MuebleId",
+                name: "IX_Registros_forograficos_inmuebleId",
                 table: "Registros_forograficos",
-                column: "MuebleId");
+                column: "inmuebleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rel_perfiles_roles_perfilId",
