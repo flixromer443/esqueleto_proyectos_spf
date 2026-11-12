@@ -49,8 +49,8 @@ namespace Data
         public DbSet<Observacion_bien> Observaciones_bien { get; set; }
         public DbSet<Observacion_inmueble> Observaciones_inmueble { get; set; }
         public DbSet<Observacion_mueble> Observaciones_muebles { get; set; }
+        public DbSet<Partida_presupuestaria> Partidas_presupuestarias { get; set; }
         public DbSet<Perfil> Perfiles { get; set; }
-        public DbSet<Presupuesto> Presupuestos { get; set; }
         public DbSet<Registro_fotografico> Registros_forograficos { get; set; }
         public DbSet<Rel_perfil_rol> Rel_perfiles_roles { get; set; }
         public DbSet<Rol> Roles { get; set; }

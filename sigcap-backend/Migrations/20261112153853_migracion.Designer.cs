@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace sigcapbackend.Migrations
 {
     [DbContext(typeof(SigcapDbContext))]
-    [Migration("20261110220120_migracion")]
+    [Migration("20261112153853_migracion")]
     partial class migracion
     {
         /// <inheritdoc />
@@ -97,7 +97,7 @@ namespace sigcapbackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PresupuestoId")
+                    b.Property<int>("Partida_presupuestariaId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Subtipo_adquisicionId")
@@ -113,7 +113,7 @@ namespace sigcapbackend.Migrations
 
                     b.HasIndex("Codigo_presupuestarioId");
 
-                    b.HasIndex("PresupuestoId");
+                    b.HasIndex("Partida_presupuestariaId");
 
                     b.HasIndex("Subtipo_adquisicionId");
 
@@ -133,18 +133,26 @@ namespace sigcapbackend.Migrations
                     b.Property<int>("BienId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Estado_bien_de_usoId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("InmuebleId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("MuebleId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Tipo_BajaId")
+                    b.Property<string>("Nro_expediente_baja")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Tipo_BajaId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BienId");
+
+                    b.HasIndex("Estado_bien_de_usoId");
 
                     b.HasIndex("InmuebleId");
 
@@ -845,13 +853,10 @@ namespace sigcapbackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("F_alta")
+                    b.Property<DateTime?>("F_alta")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("F_ingreso")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("F_observacion")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Ficha_tecnicaId")
@@ -860,7 +865,11 @@ namespace sigcapbackend.Migrations
                     b.Property<int>("Kilometraje")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Taller_mecanicoId")
+                    b.Property<string>("Observacion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Taller_mecanicoId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -1008,6 +1017,39 @@ namespace sigcapbackend.Migrations
                     b.ToTable("Observaciones_muebles");
                 });
 
+            modelBuilder.Entity("sigcapbackend.Models.Partida_presupuestaria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClaseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Codigo_presupuestarioId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubclaseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("unidadId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClaseId");
+
+                    b.HasIndex("Codigo_presupuestarioId");
+
+                    b.HasIndex("SubclaseId");
+
+                    b.HasIndex("unidadId");
+
+                    b.ToTable("Partidas_presupuestarias");
+                });
+
             modelBuilder.Entity("sigcapbackend.Models.Perfil", b =>
                 {
                     b.Property<int>("Id")
@@ -1023,29 +1065,6 @@ namespace sigcapbackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Perfiles");
-                });
-
-            modelBuilder.Entity("sigcapbackend.Models.Presupuesto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Codigo_presupuestarioId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("unidadId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Codigo_presupuestarioId");
-
-                    b.HasIndex("unidadId");
-
-                    b.ToTable("Presupuestos");
                 });
 
             modelBuilder.Entity("sigcapbackend.Models.Registro_fotografico", b =>
@@ -1236,15 +1255,6 @@ namespace sigcapbackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("F_alta")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("F_ingreso")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("F_observacion")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Localidad")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1426,7 +1436,10 @@ namespace sigcapbackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("estado_UsuarioId")
+                    b.Property<int>("estado_sesionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("estado_usuarioId")
                         .HasColumnType("integer");
 
                     b.Property<int>("perfilId")
@@ -1434,7 +1447,9 @@ namespace sigcapbackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("estado_UsuarioId");
+                    b.HasIndex("estado_sesionId");
+
+                    b.HasIndex("estado_usuarioId");
 
                     b.HasIndex("perfilId");
 
@@ -1551,9 +1566,9 @@ namespace sigcapbackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("sigcapbackend.Models.Presupuesto", "Presupuesto")
+                    b.HasOne("sigcapbackend.Models.Partida_presupuestaria", "Partida_presupuestaria")
                         .WithMany("Bienes")
-                        .HasForeignKey("PresupuestoId")
+                        .HasForeignKey("Partida_presupuestariaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1571,7 +1586,7 @@ namespace sigcapbackend.Migrations
 
                     b.Navigation("Codigo_presupuestario");
 
-                    b.Navigation("Presupuesto");
+                    b.Navigation("Partida_presupuestaria");
 
                     b.Navigation("Subtipo_adquisicion");
 
@@ -1586,6 +1601,12 @@ namespace sigcapbackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("sigcapbackend.Models.Estado_bien_de_uso", "Estado_bien_de_uso")
+                        .WithMany()
+                        .HasForeignKey("Estado_bien_de_usoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("sigcapbackend.Models.Inmueble", "Inmueble")
                         .WithMany()
                         .HasForeignKey("InmuebleId");
@@ -1596,11 +1617,11 @@ namespace sigcapbackend.Migrations
 
                     b.HasOne("sigcapbackend.Models.Tipo_baja", "Tipo_Baja")
                         .WithMany()
-                        .HasForeignKey("Tipo_BajaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Tipo_BajaId");
 
                     b.Navigation("Bien");
+
+                    b.Navigation("Estado_bien_de_uso");
 
                     b.Navigation("Inmueble");
 
@@ -1991,9 +2012,7 @@ namespace sigcapbackend.Migrations
 
                     b.HasOne("sigcapbackend.Models.Taller_mecanico", "Taller_mecanico")
                         .WithMany()
-                        .HasForeignKey("Taller_mecanicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Taller_mecanicoId");
 
                     b.Navigation("Ficha_tecnica");
 
@@ -2054,21 +2073,37 @@ namespace sigcapbackend.Migrations
                     b.Navigation("Mueble");
                 });
 
-            modelBuilder.Entity("sigcapbackend.Models.Presupuesto", b =>
+            modelBuilder.Entity("sigcapbackend.Models.Partida_presupuestaria", b =>
                 {
+                    b.HasOne("sigcapbackend.Models.Clase", "Clase")
+                        .WithMany()
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("sigcapbackend.Models.Codigo_presupuestario", "Codigo_presupuestario")
                         .WithMany()
                         .HasForeignKey("Codigo_presupuestarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("sigcapbackend.Models.Subclase", "Subclase")
+                        .WithMany()
+                        .HasForeignKey("SubclaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("sigcapbackend.Models.Unidad", "unidad")
-                        .WithMany("presupuestos")
+                        .WithMany("partidas_presupuestarias")
                         .HasForeignKey("unidadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Clase");
+
                     b.Navigation("Codigo_presupuestario");
+
+                    b.Navigation("Subclase");
 
                     b.Navigation("unidad");
                 });
@@ -2156,9 +2191,15 @@ namespace sigcapbackend.Migrations
 
             modelBuilder.Entity("sigcapbackend.Models.Usuario", b =>
                 {
-                    b.HasOne("sigcapbackend.Models.Estado_usuario", "estado_Usuario")
+                    b.HasOne("sigcapbackend.Models.Estado_sesion", "estado_sesion")
                         .WithMany()
-                        .HasForeignKey("estado_UsuarioId")
+                        .HasForeignKey("estado_sesionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("sigcapbackend.Models.Estado_usuario", "estado_usuario")
+                        .WithMany()
+                        .HasForeignKey("estado_usuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2168,7 +2209,9 @@ namespace sigcapbackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("estado_Usuario");
+                    b.Navigation("estado_sesion");
+
+                    b.Navigation("estado_usuario");
 
                     b.Navigation("perfil");
                 });
@@ -2271,14 +2314,14 @@ namespace sigcapbackend.Migrations
                     b.Navigation("codigo_Qr");
                 });
 
+            modelBuilder.Entity("sigcapbackend.Models.Partida_presupuestaria", b =>
+                {
+                    b.Navigation("Bienes");
+                });
+
             modelBuilder.Entity("sigcapbackend.Models.Perfil", b =>
                 {
                     b.Navigation("roles");
-                });
-
-            modelBuilder.Entity("sigcapbackend.Models.Presupuesto", b =>
-                {
-                    b.Navigation("Bienes");
                 });
 
             modelBuilder.Entity("sigcapbackend.Models.Rol", b =>
@@ -2295,7 +2338,7 @@ namespace sigcapbackend.Migrations
                 {
                     b.Navigation("alerta_Recuento_Fisicos");
 
-                    b.Navigation("presupuestos");
+                    b.Navigation("partidas_presupuestarias");
                 });
 
             modelBuilder.Entity("sigcapbackend.Models.Vehiculo", b =>

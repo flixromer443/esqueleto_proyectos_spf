@@ -10,7 +10,9 @@ namespace sigcapbackend.Models
     {
         public int Id { get; set; }
         public Bien Bien{ get; set; }
-        public Tipo_baja Tipo_Baja { get; set; }
+        public Estado_bien_de_uso Estado_bien_de_uso {  get; set; }
+        public string? Nro_expediente_baja {  get; set; }
+        public Tipo_baja? Tipo_Baja { get; set; }
         public Mueble? Mueble { get; set; }
         public Inmueble? Inmueble { get; set; }
         public Bien_de_uso()

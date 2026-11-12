@@ -9,9 +9,6 @@ namespace sigcapbackend.Models
     public class Taller_mecanico
     {
         public int Id { get; set; }
-        public DateTime F_ingreso{ get; set; }
-        public DateTime F_alta { get; set; }
-        public DateTime F_observacion { get; set; }
         public string Cod_postal{ get; set; }
         public string Calle{ get; set; }
         public int numero { get; set; }

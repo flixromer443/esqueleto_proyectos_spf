@@ -201,9 +201,6 @@ namespace sigcapbackend.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    F_ingreso = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    F_alta = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    F_observacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Cod_postal = table.Column<string>(type: "text", nullable: false),
                     Calle = table.Column<string>(type: "text", nullable: false),
                     numero = table.Column<int>(type: "integer", nullable: false),
@@ -374,14 +371,21 @@ namespace sigcapbackend.Migrations
                     Nombre = table.Column<string>(type: "text", nullable: false),
                     Contrasenia = table.Column<string>(type: "text", nullable: false),
                     perfilId = table.Column<int>(type: "integer", nullable: false),
-                    estado_UsuarioId = table.Column<int>(type: "integer", nullable: false)
+                    estado_sesionId = table.Column<int>(type: "integer", nullable: false),
+                    estado_usuarioId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Usuarios_Estados_usuarios_estado_UsuarioId",
-                        column: x => x.estado_UsuarioId,
+                        name: "FK_Usuarios_Estados_sesion_estado_sesionId",
+                        column: x => x.estado_sesionId,
+                        principalTable: "Estados_sesion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Estados_usuarios_estado_usuarioId",
+                        column: x => x.estado_usuarioId,
                         principalTable: "Estados_usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -551,11 +555,11 @@ namespace sigcapbackend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     F_ingreso = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    F_alta = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    F_observacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    F_alta = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Kilometraje = table.Column<int>(type: "integer", nullable: false),
+                    Observacion = table.Column<string>(type: "text", nullable: false),
                     Ficha_tecnicaId = table.Column<int>(type: "integer", nullable: false),
-                    Taller_mecanicoId = table.Column<int>(type: "integer", nullable: false)
+                    Taller_mecanicoId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -570,8 +574,7 @@ namespace sigcapbackend.Migrations
                         name: "FK_Mantenimientos_Talleres_mecanicos_Taller_mecanicoId",
                         column: x => x.Taller_mecanicoId,
                         principalTable: "Talleres_mecanicos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -918,32 +921,6 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Presupuestos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    unidadId = table.Column<int>(type: "integer", nullable: false),
-                    Codigo_presupuestarioId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Presupuestos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Presupuestos_Codigos_presupuestarios_Codigo_presupuestarioId",
-                        column: x => x.Codigo_presupuestarioId,
-                        principalTable: "Codigos_presupuestarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Presupuestos_Unidades_unidadId",
-                        column: x => x.unidadId,
-                        principalTable: "Unidades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Historicos_estado_dispositivo_telepase",
                 columns: table => new
                 {
@@ -1071,50 +1048,6 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bienes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    F_adq = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Valor_unitario = table.Column<double>(type: "double precision", nullable: false),
-                    Descripcion = table.Column<string>(type: "text", nullable: false),
-                    Nro_expediente = table.Column<string>(type: "text", nullable: false),
-                    Subtipo_adquisicionId = table.Column<int>(type: "integer", nullable: false),
-                    Tipo_adquisicionId = table.Column<int>(type: "integer", nullable: false),
-                    Codigo_presupuestarioId = table.Column<int>(type: "integer", nullable: false),
-                    PresupuestoId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bienes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bienes_Codigos_presupuestarios_Codigo_presupuestarioId",
-                        column: x => x.Codigo_presupuestarioId,
-                        principalTable: "Codigos_presupuestarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bienes_Presupuestos_PresupuestoId",
-                        column: x => x.PresupuestoId,
-                        principalTable: "Presupuestos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bienes_Subtipos_adquisicion_Subtipo_adquisicionId",
-                        column: x => x.Subtipo_adquisicionId,
-                        principalTable: "Subtipos_adquisicion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bienes_Tipos_adquisicion_Tipo_adquisicionId",
-                        column: x => x.Tipo_adquisicionId,
-                        principalTable: "Tipos_adquisicion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Codigos_qr",
                 columns: table => new
                 {
@@ -1164,13 +1097,99 @@ namespace sigcapbackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Partidas_presupuestarias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    unidadId = table.Column<int>(type: "integer", nullable: false),
+                    Codigo_presupuestarioId = table.Column<int>(type: "integer", nullable: false),
+                    ClaseId = table.Column<int>(type: "integer", nullable: false),
+                    SubclaseId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Partidas_presupuestarias", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Partidas_presupuestarias_Clases_ClaseId",
+                        column: x => x.ClaseId,
+                        principalTable: "Clases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Partidas_presupuestarias_Codigos_presupuestarios_Codigo_pre~",
+                        column: x => x.Codigo_presupuestarioId,
+                        principalTable: "Codigos_presupuestarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Partidas_presupuestarias_Subclases_SubclaseId",
+                        column: x => x.SubclaseId,
+                        principalTable: "Subclases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Partidas_presupuestarias_Unidades_unidadId",
+                        column: x => x.unidadId,
+                        principalTable: "Unidades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bienes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    F_adq = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Valor_unitario = table.Column<double>(type: "double precision", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: false),
+                    Nro_expediente = table.Column<string>(type: "text", nullable: false),
+                    Subtipo_adquisicionId = table.Column<int>(type: "integer", nullable: false),
+                    Tipo_adquisicionId = table.Column<int>(type: "integer", nullable: false),
+                    Codigo_presupuestarioId = table.Column<int>(type: "integer", nullable: false),
+                    Partida_presupuestariaId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bienes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bienes_Codigos_presupuestarios_Codigo_presupuestarioId",
+                        column: x => x.Codigo_presupuestarioId,
+                        principalTable: "Codigos_presupuestarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bienes_Partidas_presupuestarias_Partida_presupuestariaId",
+                        column: x => x.Partida_presupuestariaId,
+                        principalTable: "Partidas_presupuestarias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bienes_Subtipos_adquisicion_Subtipo_adquisicionId",
+                        column: x => x.Subtipo_adquisicionId,
+                        principalTable: "Subtipos_adquisicion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bienes_Tipos_adquisicion_Tipo_adquisicionId",
+                        column: x => x.Tipo_adquisicionId,
+                        principalTable: "Tipos_adquisicion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bienes_de_uso",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BienId = table.Column<int>(type: "integer", nullable: false),
-                    Tipo_BajaId = table.Column<int>(type: "integer", nullable: false),
+                    Estado_bien_de_usoId = table.Column<int>(type: "integer", nullable: false),
+                    Nro_expediente_baja = table.Column<string>(type: "text", nullable: true),
+                    Tipo_BajaId = table.Column<int>(type: "integer", nullable: true),
                     MuebleId = table.Column<int>(type: "integer", nullable: true),
                     InmuebleId = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -1181,6 +1200,12 @@ namespace sigcapbackend.Migrations
                         name: "FK_Bienes_de_uso_Bienes_BienId",
                         column: x => x.BienId,
                         principalTable: "Bienes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bienes_de_uso_Estados_bienes_de_uso_Estado_bien_de_usoId",
+                        column: x => x.Estado_bien_de_usoId,
+                        principalTable: "Estados_bienes_de_uso",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -1197,8 +1222,7 @@ namespace sigcapbackend.Migrations
                         name: "FK_Bienes_de_uso_Tipos_baja_Tipo_BajaId",
                         column: x => x.Tipo_BajaId,
                         principalTable: "Tipos_baja",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1349,9 +1373,9 @@ namespace sigcapbackend.Migrations
                 column: "Codigo_presupuestarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bienes_PresupuestoId",
+                name: "IX_Bienes_Partida_presupuestariaId",
                 table: "Bienes",
-                column: "PresupuestoId");
+                column: "Partida_presupuestariaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bienes_Subtipo_adquisicionId",
@@ -1367,6 +1391,11 @@ namespace sigcapbackend.Migrations
                 name: "IX_Bienes_de_uso_BienId",
                 table: "Bienes_de_uso",
                 column: "BienId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bienes_de_uso_Estado_bien_de_usoId",
+                table: "Bienes_de_uso",
+                column: "Estado_bien_de_usoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bienes_de_uso_InmuebleId",
@@ -1628,13 +1657,23 @@ namespace sigcapbackend.Migrations
                 column: "MuebleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Presupuestos_Codigo_presupuestarioId",
-                table: "Presupuestos",
+                name: "IX_Partidas_presupuestarias_ClaseId",
+                table: "Partidas_presupuestarias",
+                column: "ClaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Partidas_presupuestarias_Codigo_presupuestarioId",
+                table: "Partidas_presupuestarias",
                 column: "Codigo_presupuestarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Presupuestos_unidadId",
-                table: "Presupuestos",
+                name: "IX_Partidas_presupuestarias_SubclaseId",
+                table: "Partidas_presupuestarias",
+                column: "SubclaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Partidas_presupuestarias_unidadId",
+                table: "Partidas_presupuestarias",
                 column: "unidadId");
 
             migrationBuilder.CreateIndex(
@@ -1683,9 +1722,14 @@ namespace sigcapbackend.Migrations
                 column: "Ficha_tecnicaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_estado_UsuarioId",
+                name: "IX_Usuarios_estado_sesionId",
                 table: "Usuarios",
-                column: "estado_UsuarioId");
+                column: "estado_sesionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_estado_usuarioId",
+                table: "Usuarios",
+                column: "estado_usuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_perfilId",
@@ -1780,9 +1824,6 @@ namespace sigcapbackend.Migrations
                 name: "Rel_perfiles_roles");
 
             migrationBuilder.DropTable(
-                name: "Subclases");
-
-            migrationBuilder.DropTable(
                 name: "Tipos_estado_historicos");
 
             migrationBuilder.DropTable(
@@ -1795,13 +1836,7 @@ namespace sigcapbackend.Migrations
                 name: "Bienes_de_uso");
 
             migrationBuilder.DropTable(
-                name: "Estados_bienes_de_uso");
-
-            migrationBuilder.DropTable(
                 name: "Dispositivos_telepase");
-
-            migrationBuilder.DropTable(
-                name: "Estados_sesion");
 
             migrationBuilder.DropTable(
                 name: "Tarjetas_combustible");
@@ -1816,13 +1851,13 @@ namespace sigcapbackend.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Clases");
-
-            migrationBuilder.DropTable(
                 name: "Estados_alerta_recuento_fisico");
 
             migrationBuilder.DropTable(
                 name: "Bienes");
+
+            migrationBuilder.DropTable(
+                name: "Estados_bienes_de_uso");
 
             migrationBuilder.DropTable(
                 name: "Inmuebles");
@@ -1840,13 +1875,16 @@ namespace sigcapbackend.Migrations
                 name: "Estados_tarjetas_combustible");
 
             migrationBuilder.DropTable(
+                name: "Estados_sesion");
+
+            migrationBuilder.DropTable(
                 name: "Estados_usuarios");
 
             migrationBuilder.DropTable(
                 name: "Perfiles");
 
             migrationBuilder.DropTable(
-                name: "Presupuestos");
+                name: "Partidas_presupuestarias");
 
             migrationBuilder.DropTable(
                 name: "Subtipos_adquisicion");
@@ -1858,7 +1896,7 @@ namespace sigcapbackend.Migrations
                 name: "Vehiculos");
 
             migrationBuilder.DropTable(
-                name: "Codigos_presupuestarios");
+                name: "Subclases");
 
             migrationBuilder.DropTable(
                 name: "Unidades");
@@ -1879,7 +1917,7 @@ namespace sigcapbackend.Migrations
                 name: "Tipos_vehiculos");
 
             migrationBuilder.DropTable(
-                name: "Vidas_utiles");
+                name: "Clases");
 
             migrationBuilder.DropTable(
                 name: "Combustibles");
@@ -1892,6 +1930,12 @@ namespace sigcapbackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Marcas");
+
+            migrationBuilder.DropTable(
+                name: "Codigos_presupuestarios");
+
+            migrationBuilder.DropTable(
+                name: "Vidas_utiles");
         }
     }
 }
